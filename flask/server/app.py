@@ -24,7 +24,7 @@ def create_app(config_filename=None):
     :return: The configured Flask app instance.
     """
     app = Flask(__name__)  
-    
+
     if config_filename:
         CONFIG = validate_configuration_file(config_filename)
         app.config.from_file(CONFIG) # or app.config.from_object()
@@ -32,7 +32,7 @@ def create_app(config_filename=None):
     app.config['SECRET_KEY'] = 'your_secret_key_here' 
     CORS(app)
 
-    bp_efix = '/api/v1'
+    bp_efix = '/'
     app.register_blueprint(api_bp, url_prefix=bp_efix)
 
     return app
