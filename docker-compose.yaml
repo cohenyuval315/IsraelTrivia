@@ -1,0 +1,25 @@
+services:
+  backend:
+    build:
+      context: flask
+      target: flaskBuilder
+    # flask requires SIGINT to stop gracefully
+    # (default stop signal from Compose is SIGTERM)
+    stop_signal: SIGINT
+    environment:
+      - KAKI
+      - FLASK_SERVER_PORT=5000
+      - FLASK_APP=server
+      - FLASK_ENV=development
+      - MONGO_API_URL = mongodb://mongo:27017
+      - MONGO_DATABASE_NAME = TriviaDB      
+    volumes:
+      - ./flask:/src
+    ports:
+      - "5000:5000"      
+    depends_on:
+      -  mongo          
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017" # for local host

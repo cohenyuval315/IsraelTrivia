@@ -1,0 +1,67 @@
+{
+    "server": {
+        "host": "0.0.0.0",
+        "port": 5000,
+        "authorization": ""
+    },
+    "endpoints": {
+        "Home": {
+            "GET": {
+                "description": "Homepage"
+            },
+            "controller": ""
+        },
+        "Register": {
+            "POST": {
+                "description": "Updates..."
+            },
+            "controller": "register"
+        },
+        "Login": {
+            "POST": {
+                "description": "A class for internal changes"
+            },
+            "controller": "login"
+        },
+
+        "Logout": {
+            "GET": {
+                "description": "A class for internal changes"
+            },
+            "controller": "logout"
+        },
+        "Endpoint_1": {
+            "HTTP_METHOD": {
+                "description": "Description of the HTTP method of the endpoint"
+            },
+            "controller": "Endpoint_1"
+        },
+        "AdminDashboard": {
+            "GET": {
+                "description": "Description of the HTTP method of the endpoint"
+            },
+            "controller": "admin"
+        },
+        "AdminDashboard.Maintenance": {
+            "GET": {
+                "description": "A class for internal changes"
+            },
+            "POST": {
+                "description": "Updates..."
+            },
+            "controller": "admin/Maintenance"
+        },
+        "UserProfile": {
+            "GET": {
+                "description": "Description of the HTTP method of the endpoint"
+            },
+            "controller": "profile"
+        },
+        "Endpoint_2": {
+            "HTTP_METHOD": {
+                "description": "Description of the HTTP method of the endpoint"
+            },
+            "controller": "Endpoint_2"
+        }
+    }
+}
