@@ -154,18 +154,18 @@ class Register(Resource):
         if data['username'] in users:
             return 'Username already exists.', 400
 
-        id = generate_new_token()
+        password_token = generate_new_token() # todo change it
 
-        salted_password = id + data['password']
+        salted_password = password_token + data['password']
 
         # Hash the password using Flask-Bcrypt
         password_hash = bcrypt.generate_password_hash(salted_password).decode('utf-8')
 
         # Create the user
-        user = User(id=id, username=data['username'], password=password_hash)
+        user = User(password_token=password_token, username=data['username'], password=password_hash)
 
         # Add the new user to the JSON file
-        users[data['username']] = {'user_id': id, 'username': data['username'], 'password_hash': password_hash, 'roles': user.role}
+        users[data['username']] = {'password_token': password_token, 'username': data['username'], 'password_hash': password_hash, 'roles': user.role}
         with open(os.getcwd() + JSONS_PATH + 'users.json', 'w') as users_file:
             json.dump(users, users_file, indent=4)
         return 'User registered successfully.', 201
@@ -203,7 +203,7 @@ class Login(Resource):
                 stored_password_hash = user['password_hash']
                 # You should have stored the password securely hashed during user registration
                 # Here, we'll use a simple hash comparison for demonstration purposes
-                if bcrypt.check_password_hash(stored_password_hash, user['user_id'] + password):
+                if bcrypt.check_password_hash(stored_password_hash, user['password_token'] + password):
                     # Successful login
                     response = make_response("Login successful")
                     # Set the 'username' cookie with a 2-hour expiration

@@ -1,6 +1,7 @@
 import secrets
 from flask import request
 
+
 def generate_new_token():
     # Generate a secure random token as the user ID
     token = secrets.token_hex(8)  # Adjust the token length as needed
@@ -20,6 +21,7 @@ def custom_login_required(func):
     Returns:
         function: The decorated function.
     """
+
     def wrapper(*args, **kwargs):
         """
         Inner function that performs the login check and role validation.
@@ -36,6 +38,7 @@ def custom_login_required(func):
 
     return wrapper
 
+
 # custom_roles_required Decorator
 def custom_roles_required(role):
     """
@@ -49,6 +52,7 @@ def custom_roles_required(role):
     Returns:
         function: The decorator function.
     """
+
     def decorator(func):
         """
         Inner decorator function that performs the role-based access check.
@@ -57,6 +61,7 @@ def custom_roles_required(role):
         Returns:
             function: The decorated function.
         """
+
         def wrapper(*args, **kwargs):
             """
             Inner function that performs the role-based access check.
@@ -73,6 +78,7 @@ def custom_roles_required(role):
             return "Unauthorized", 401
 
         return wrapper
+
     return decorator
 
 
@@ -82,17 +88,19 @@ def authenticate(func):
         if not getattr(func, 'authenticated', True):
             return func(*args, **kwargs)
 
-        acct = basic_authentication() 
+        acct = basic_authentication()
 
         if acct:
             return func(*args, **kwargs)
 
         flask_restful.abort(401)
+
     return wrapper
 
 
 def cache(f):
     @wraps(f)
     def cacher(*args, **kwargs):
-        # caching stuff
+
+    # caching stuff
     return cacher
