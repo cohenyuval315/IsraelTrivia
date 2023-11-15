@@ -1,11 +1,27 @@
 import secrets
 from flask import request
+from bleach import clean
+
+
+TOKEN_LENGTH = 8  # Length of the secure token for user IDs
+
+def is_valid(user_input):
+    """
+    A function that checks if the user's input is valid.
+    :param user_input: The user input
+    """
+    # Implement your validation logic here
+    # Return True if input is valid, False otherwise
+    cleaned_input = clean(user_input)  # Sanitize
+    return cleaned_input
 
 
 def generate_new_token():
-    # Generate a secure random token as the user ID
+    """
+    Generate a secure random token as the user ID
+    Returns: The token generated
+    """
     token = secrets.token_hex(8)  # Adjust the token length as needed
-
     return token
 
 
@@ -31,6 +47,7 @@ def custom_login_required(func):
         Returns:
             Any: The result of the decorated function or an "Unauthorized" response.
         """
+        # Todo check if user logged in
         if 'username' in request.cookies and request.cookies['username'] in users:
             return func(*args, **kwargs)
         else:
@@ -71,6 +88,7 @@ def custom_roles_required(role):
             Returns:
                 Any: The result of the decorated function or an "Unauthorized" response.
             """
+            # todo check if user logged in and has the required role
             if 'username' in request.cookies and request.cookies['username'] in users:
                 user = users[request.cookies['username']]
                 if 'roles' in user and role in user['roles']:
