@@ -1,0 +1,39 @@
+{
+    "$jsonSchema": {
+      "bsonType": "object",
+      "required": ["question_id", "question", "question_type_id", "category_id", "difficulty", "options", "right_answer_index", "solution", "references"],
+      "properties": {
+        "question_id": {"bsonType": "objectId", "description": "must be a objectId"},
+        "question": {
+            "bsonType": "array",
+            "minItems": 1,  
+            "items": {
+              "bsonType": "object",
+              "minProperties": 1,
+              "maxProperties": 1, 
+              "patternProperties": {
+                ".": {"bsonType": "string", "description": "must be a string"}
+              }
+            }
+          },
+        "question_type_id": {"bsonType": "objectId", "description": "must be a objectId"},
+        "category_id": {"bsonType": "objectId", "description": "must be a objectId"},
+        "difficulty": {"bsonType": "int", "description": "must be an integer"},
+        "options": {
+            "bsonType": "array",
+            "minItems": 0,  
+            "items": {
+              "bsonType": "object",
+              "minProperties": 1,
+              "maxProperties": 1, 
+              "patternProperties": {
+                ".": {"bsonType": "string", "description": "must be a string"}
+              }
+            }
+        },
+        "right_answer_index": {"bsonType": "int", "description": "must be an integer"},
+        "solution": {"bsonType": "string", "description": "must be a string"},
+        "references": {"bsonType": "array", "items": {"bsonType": "string", "description": "must be a string"}}
+      }
+    }
+  }

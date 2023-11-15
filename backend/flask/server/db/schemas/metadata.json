@@ -1,0 +1,92 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": ["version", "date", "data"],
+    "properties": {
+      "version": {"bsonType": "string", "description": "must be a string"},
+      "date": {"bsonType": "date", "description": "must be a date-time value"},
+      "data": {
+        "bsonType": "object",
+        "required": ["levels", "questions_difficulty_weights", "categories", "question_types", "supported_languages", "application_settings"],
+        "properties": {
+          "levels": {
+            "bsonType": "array",
+            "items": {
+              "bsonType": "object",
+              "required": ["index", "level_name", "num_questions", "question_difficulty_distribution", "min_score"],
+              "properties": {
+                "index": {"bsonType": "int", "description": "must be an integer"},
+                "level_name": {"bsonType": "string", "description": "must be a string"},
+                "num_questions": {"bsonType": "int", "description": "must be an integer"},
+                "question_difficulty_distribution": {"bsonType": "array", "description": "must be an array"},
+                "min_score": {"bsonType": "int", "description": "must be an integer"}
+              }
+            }
+          },
+          "questions_difficulties": {
+            "bsonType": "array", 
+            "minItems":3,
+              "items": {
+                "bsonType": "object",
+                "required": ["weight", "time_in_sec"],
+                "properties": {
+                  "weight": {"bsonType": "int", "description": "must be an integer"},
+                  "time_in_sec": {"bsonType": "int", "description": "must be an integer"}
+                }            
+            }
+          },
+          "categories": {
+            "bsonType": "array",
+            "minItems":1,
+            "items": {
+              "bsonType": "object",
+              "required": ["category_id", "title"],
+              "properties": {
+                "category_id": {"bsonType": "objectId", "description": "must be an ObjectId"},
+                "title": {"bsonType": "string", "description": "must be a string"}
+              }
+            }
+          },
+          "question_types": {
+            "bsonType": "array",
+            "minItems":1,
+            "items": {
+              "bsonType": "object",
+              "required": ["question_type_id", "title"],
+              "properties": {
+                "question_type_id": {"bsonType": "objectId", "description": "must be an ObjectId"},
+                "title": {"bsonType": "string", "description": "must be a string"}
+              }
+            }
+          },
+          "supported_languages": {
+            "bsonType": "array",
+            "minItems":1,
+            "items": {
+              "bsonType": "object",
+              "required": ["language_id", "language","symbol"],
+              "properties": {
+                "language_id": {"bsonType": "objectId", "description": "must be an ObjectId"},
+                "language": {"bsonType": "string", "description": "must be a string"},
+                "symbol": {"bsonType": "string", "description": "must be a string"}
+              }
+            }
+          },
+          "application_settings": {
+            "bsonType": "array",
+            "items": {
+              "bsonType": "object",
+              "required": ["setting_id", "title", "default_value", "description"],
+              "properties": {
+                "setting_id": {"bsonType": "objectId", "description": "must be an ObjectId"},
+                "title": {"bsonType": "string", "description": "must be a string"},
+                "default_value": {"bsonType": "string", "description": "must be a string"},
+                "description": {"bsonType": "string", "description": "must be a string"}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

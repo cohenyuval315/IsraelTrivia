@@ -15,7 +15,7 @@ services:
       - FLASK_ENV=development
       - CONFIG_MONGODB_ADMINUSERNAME=root
       - CONFIG_MONGODB_ADMINPASSWORD=pass
-      - CONFIG_MONGODB_URL= mongodb://root:pass@mongo:27017/      
+      - CONFIG_MONGODB_URI=mongodb://root:pass@mongo:27017/      
       - CONFIG_MONGO_DATABASE_NAME=TriviaDB      
     volumes:
       - ./flask:/server
