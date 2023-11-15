@@ -5,8 +5,8 @@ class User(UserMixin):
     """
 
     """
-    def __init__(self, id, username, password):
-        self.id = id
+    def __init__(self, password_token, username, password):
+        self.password_token = password_token
         self.username = username
         self.password = password
         self.role = ["user"]
