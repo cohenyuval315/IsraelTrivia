@@ -14,3 +14,9 @@ class CustomError(Exception):
         super().__init__(message)
         logger.error(message)
 
+class ConfigurationNotFoundError(Exception):
+    def __init__(self, message=None):
+        if message is None:
+            message = "Configuration Not Found"
+        super().__init__(message)
+        logger.error(message)    

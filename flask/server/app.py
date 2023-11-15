@@ -3,6 +3,7 @@ from api import api_bp
 from logger import logger
 from flask import Flask
 from flask_cors import CORS
+import exceptions
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 CONFIG_DIR = "config"
@@ -17,6 +18,18 @@ def validate_configuration_file(config_filename):
     return config_path
 
 
+def attach_routes(app):
+    bp_efix = '/'
+    app.register_blueprint(api_bp, url_prefix=bp_efix)
+
+
+def get_secret_key():
+    secret_key = os.environ.get("SECRET_KEY",None)
+    if not secret_key:
+        raise exceptions.ConfigurationNotFoundError("Secret Key Configuration Not Found")
+    return secret_key
+
+
 def create_app(config_filename=None):
     """
     Creates and configures a Flask application instance.
@@ -28,12 +41,11 @@ def create_app(config_filename=None):
     if config_filename:
         CONFIG = validate_configuration_file(config_filename)
         app.config.from_file(CONFIG) # or app.config.from_object()
+        logger.debug(f"Creating App Instance with configuration file {config_filename}")
     
-    app.config['SECRET_KEY'] = 'your_secret_key_here' 
+    app.config['SECRET_KEY'] = get_secret_key()
     CORS(app)
-
-    bp_efix = '/'
-    app.register_blueprint(api_bp, url_prefix=bp_efix)
+    attach_routes(app)
 
     return app
 
