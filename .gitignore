@@ -174,3 +174,14 @@ cython_debug/
 .ENV
 .env
 
+# PyCharm
+.idea/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
