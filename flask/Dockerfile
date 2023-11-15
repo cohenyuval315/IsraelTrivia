@@ -5,7 +5,7 @@ WORKDIR /app
 COPY requirements.txt /app/
 
 #  cache dependencies , resuing if is not changed 
-RUN --mount=type=cache,target=/root/.cache/pip \ 
+RUN --mount=type=cache,target=/root/.cache/pip \ \
     pip3 install -r requirements.txt
 
 COPY server /app/
