@@ -1,4 +1,4 @@
-// LoginScreen.js
+// LoginScreen.jsx
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 
@@ -9,7 +9,8 @@ const LoginScreen = ({ navigation }) => {
     const handleLogin = () => {
         // Perform login logic here
         // For simplicity, let's just navigate to the MainScreen
-        navigation.navigate('Main');
+
+        navigation.navigate('Stack2');
     };
 
     return (
@@ -17,7 +18,7 @@ const LoginScreen = ({ navigation }) => {
             <Text>Login</Text>
             <TextInput
                 placeholder="Username"
-                value={username}
+                value={username}x
                 onChangeText={setUsername}
                 style={styles.input}
             />
