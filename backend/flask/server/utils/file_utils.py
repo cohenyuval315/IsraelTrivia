@@ -1,36 +1,21 @@
-import os
-import json
-from bleach import clean
+def create_dict(endpoints_dict):
+    """
+    A function that receives a path to the configuration file and returns the resource dictionary.
+    :param endpoints_dict: The path to the configuration file.
+    :return: The resource dictionary with all the endpoints.
+    """
 
-class FileUtils:
-    WRITE = "r+"
-    JSONS_PATH = "ServerSide/server/Resources/jsons/"
+    r_dict = {}  # The dict to store the classes and the endpoints.
 
-    def is_valid(input):
-        """
-        A function that checks if the user's input is valid.
-        :param input: The user input
-        """
-        # Implement your validation logic here
-        # Return True if input is valid, False otherwise
-        cleaned_input = clean(input)  # Sanitize
-        return cleaned_input
+    # Check if the length is the same.
+    if len(endpoints_dict) != len(class_dict):
+        return None
 
-
-    def validate_path_load_json(root,path):
-        """
-        A function that validates a file path, loads a JSON file, and returns the loaded object.
-        :param extension: The file extension.
-        :return: The loaded JSON object or None if the file doesn't exist.
-        """
-
-        # Define the path that you want to check. "/path/to/directory"
-        path = os.getcwd() + root + path
-
-        # Check if the file exists.
-        if not os.path.exists(path):
+    # Iterate over all the endpoints.
+    for endpoint in endpoints_dict:
+        if endpoint in class_dict:
+            r_dict[class_dict[endpoint]] = endpoints_dict[endpoint]["controller"]  # Add to the dictionary.
+        else:
             return None
 
-        # Open the file to read only and return the loaded file.
-        with open(path, 'r') as f:
-            return json.load(f)
+    return r_dict
