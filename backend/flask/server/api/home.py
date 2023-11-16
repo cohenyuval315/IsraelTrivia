@@ -1,4 +1,7 @@
 from flask_restful import Resource
+from flask import jsonify, request, make_response
+from db import mongo
+
 
 # Constants and paths
 WELCOME_MSG = 'You have reached the server.'
@@ -21,6 +24,6 @@ class Home(Resource):
         A method that returns a message when you reach the server.
         :return: A simple message.
         """
-        return WELCOME_MSG, 200
-    
+        lastest_metadata = mongo.Metadata.get_latest_metadata()
+        return make_response(jsonify(message=lastest_metadata), 201)
     

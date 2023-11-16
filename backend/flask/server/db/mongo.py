@@ -293,55 +293,55 @@ class Users(CollectionBase):
     
 
 
-class Questions(CollectionBase):
+class Statements(CollectionBase):
     def __init__(self, db) -> None:
-        self.collection_name = "questions"
+        self.collection_name = "statements"
         super().__init__(self.collection_name , db)
 
     @handle_exceptions
-    def create_new_question(self,
-                            question:list[dict],
+    def create_new_statement(self,
+                            statement:list[dict],
                             options:list[dict],
                             difficulty:int,
                             right_answer_index:int,
                             solution:str,
                             references:list[str]):
-        new_question_data = {
+        new_statement_data = {
             "question_id": ObjectId(), 
-            "question": question,
+            "question": statement,
             "difficulty": difficulty,
             "options": options,
             "right_answer_index": right_answer_index,
             "solution": solution,
             "references": references
         }
-        self.collection.insert_one(new_question_data)
+        self.collection.insert_one(statement)
 
     @handle_exceptions
-    def get_random_question_by_difficulty(self,difficulty:int):
-        questions = list(self.collection.find({"difficulty": difficulty}))
-        if questions:
-            return random.choice(questions)
+    def get_random_statement_by_difficulty(self,difficulty:int):
+        statements = list(self.collection.find({"difficulty": difficulty}))
+        if statements:
+            return random.choice(statements)
         else:
             return None
 
     @handle_exceptions
-    def get_batch_random_questions(self,n, difficulty_distribution):
+    def get_batch_random_statements(self,n, difficulty_distribution):
         if len(difficulty_distribution) != 5 or sum(difficulty_distribution) != 100:
                 raise ValueError("Invalid difficulty distribution")
-        questions = []
+        statements = []
         for _ in range(n):
             random_difficulty = random.choices([1, 2, 3, 4, 5], weights=difficulty_distribution)[0]
-            question = self.get_random_question_by_difficulty(random_difficulty)
-            questions.append(question)  
-        return questions      
+            statement = self.get_random_statement_by_difficulty(random_difficulty)
+            statements.append(statement)  
+        return statements      
     
     @handle_exceptions
-    def get_level_questions(self,level_id):
+    def get_level_statements(self,level_id):
         level = mongo.Metadata.get_level_by_level_id(level_id)
-        num_of_question = level.get("num_questions",None)
-        difficulty_distribution = level.get("difficulty_distribution",None)
-        return self.get_batch_random_questions(num_of_question,difficulty_distribution)
+        num_of_statements = level["num_questions"]
+        difficulty_distribution = level["difficulty_distribution"]
+        return self.get_batch_random_statements(num_of_statements,difficulty_distribution)
 
 
 
@@ -352,7 +352,7 @@ class MongoDB(metaclass=Singleton):
         self.db = self.client[f"{database_name}"]
         self.metadata = Metadata(self.db)
         self.users = Users(self.db)
-        self.questions = Questions(self.db)
+        self.statements = Statements(self.db)
     
     @property
     def Users(self):
@@ -363,8 +363,8 @@ class MongoDB(metaclass=Singleton):
         return self.metadata
     
     @property
-    def Questions(self):
-        return self.questions
+    def Statements(self):
+        return self.statements
         
     def close_connection(self):
         self.client.close()

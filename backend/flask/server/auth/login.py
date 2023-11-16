@@ -5,6 +5,7 @@ from .utils import is_valid
 
 bcrypt = Bcrypt()
 
+
 class Login(Resource):
     """
 
