@@ -1,9 +1,9 @@
 {
     "$jsonSchema": {
       "bsonType": "object",
-      "required": ["user_id", "username", "password", "password_token", "current_level_index", "levels_highscores", "settings"],
+      "required": ["_id", "username", "password", "password_token", "current_level_index", "levels_highscores", "settings"],
       "properties": {
-        "user_id": {"bsonType": "objectId", "description": "must be an ObjectId"},
+        "_id": {"bsonType": "objectId", "description": "must be an ObjectId"},
         "username": {"bsonType": "string", "description": "must be a string"},
         "password": {"bsonType": "string", "description": "must be a string"},
         "password_token": {"bsonType": "string", "description": "must be a string"},
@@ -14,6 +14,7 @@
             "bsonType": "object",
             "required": ["level_index", "highscore", "date"],
             "properties": {
+              "level_id": {"bsonType": "objectId", "description": "must be an integer"},
               "level_index": {"bsonType": "int", "description": "must be an integer"},
               "highscore": {"bsonType": "int", "description": "must be an integer"},
               "date": {"bsonType": "date", "description": "must be a date-time value"}
