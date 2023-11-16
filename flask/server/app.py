@@ -1,5 +1,7 @@
 import os
 from api import api_bp
+from admin import admin_bp
+from auth import auth_bp
 from logger import logger
 from flask import Flask
 from flask_cors import CORS
@@ -19,9 +21,9 @@ def validate_configuration_file(config_filename):
 
 
 def attach_routes(app):
-    bp_efix = '/'
-    app.register_blueprint(api_bp, url_prefix=bp_efix)
-
+    app.register_blueprint(api_bp, url_prefix="/")
+    app.register_blueprint(admin_bp, url_prefix="/admin")
+    app.register_blueprint(auth_bp, url_prefix="/auth")
 
 def get_secret_key():
     secret_key = os.environ.get("SECRET_KEY",None)

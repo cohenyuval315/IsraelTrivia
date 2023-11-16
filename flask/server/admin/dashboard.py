@@ -3,20 +3,20 @@ from flask import jsonify, request, make_response
 
 class AdminDashboard(Resource):
     """
-    A class representing the Admin Dashboard resource.
+    A class representing the admin Dashboard resource.
     This resource is accessible to users with the 'admin' role.
     Methods:
-        get(self): Handles GET requests for the Admin Dashboard.
+        get(self): Handles GET requests for the admin Dashboard.
     """
 
     @custom_roles_required('admin')
     def get(self):
         """
-        Handle GET requests for the Admin Dashboard.
+        Handle GET requests for the admin Dashboard.
         Returns:
-            str: A message indicating access to the Admin Dashboard.
+            str: A message indicating access to the admin Dashboard.
         """
-        return "Admin Dashboard", 200
+        return "admin Dashboard", 200
 
     class Maintenance(Resource):
         """

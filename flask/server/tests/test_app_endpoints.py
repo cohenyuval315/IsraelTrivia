@@ -111,7 +111,7 @@ class TestAppEndpoints(unittest.TestCase):
         url = f"{self.base_url}/admin"
         response = requests.get(url, cookies=cookies)  # Pass the cookies in the request
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.text, "Admin Dashboard")
+        self.assertEqual(response.text, "admin Dashboard")
         log_test_success("test_admin_dashboard")
 
 
