@@ -1,1 +1,1 @@
-from blueprint_auth import auth_bp
+from .blueprint_auth import auth_bp

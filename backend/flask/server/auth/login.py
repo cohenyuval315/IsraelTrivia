@@ -1,7 +1,7 @@
 from flask_restful import Resource
 from flask import jsonify, request, make_response
 from flask_bcrypt import Bcrypt
-from utils import is_valid
+from .utils import is_valid
 
 bcrypt = Bcrypt()
 

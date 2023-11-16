@@ -674,6 +674,16 @@ def run_script():
         logger.error(e)
     logger.info(f"successfuly inserted {num_users} users") 
     logger.info(f"successfuly inserted {num_questions} questions")
+    last = mongo.Metadata.get_latest_metadata()
+    logger.info(f"metadata: {last}")
+    user_id = users[0]['user_id']
+    username = users[0]['username']
+    user = mongo.Users.get_user_by_id(user_id=user_id)
+    is_exists_true = mongo.Users.is_username_exists(username=username)
+    is_exists_false = mongo.Users.is_username_exists(username="hello")
+    logger.info(f"user by user id: {user_id}. data: {user} ")
+    logger.info(f"user is exists: username: {username}. data: {is_exists_true} ")
+    logger.info(f"user is exists: should be false. data: {is_exists_false} ")
 
 if __name__ == "__main__":
     # docker exec backend-backend-1 python scripts/insert_data.py

@@ -1,6 +1,6 @@
 from flask.blueprints import Blueprint
 from flask_restful import Api
-from dashboard import AdminDashboard
+from .dashboard import AdminDashboard
 
 admin_bp = Blueprint('admin', __name__)
 admin_api = Api(admin_bp)

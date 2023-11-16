@@ -1,6 +1,8 @@
 from flask_restful import Resource
 from flask import jsonify, request, make_response
 
+from .utils import custom_roles_required
+
 class AdminDashboard(Resource):
     """
     A class representing the admin Dashboard resource.

@@ -1,4 +1,5 @@
-from utils import custom_login_required
+from flask_restful import Resource
+from .utils import custom_login_required
 
 class UserProfile(Resource):
     """
