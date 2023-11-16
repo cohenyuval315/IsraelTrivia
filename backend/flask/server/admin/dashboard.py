@@ -3,6 +3,7 @@ from flask import jsonify, request, make_response
 
 from .utils import custom_roles_required
 
+
 class AdminDashboard(Resource):
     """
     A class representing the admin Dashboard resource.
@@ -11,15 +12,15 @@ class AdminDashboard(Resource):
         get(self): Handles GET requests for the admin Dashboard.
     """
 
-    @custom_roles_required('admin')
-    def get(self):
-        """
-        Handle GET requests for the admin Dashboard.
-        Returns:
-            str: A message indicating access to the admin Dashboard.
-        """
-        return "admin Dashboard", 200
-
+#     @custom_roles_required('admin')
+#     def get(self):
+#         """
+#         Handle GET requests for the admin Dashboard.
+#         Returns:
+#             str: A message indicating access to the admin Dashboard.
+#         """
+#         return "admin Dashboard", 200
+#
     class Maintenance(Resource):
         """
         A template class for a maintenance endpoint.

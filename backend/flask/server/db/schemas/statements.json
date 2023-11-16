@@ -1,10 +1,10 @@
 {
     "$jsonSchema": {
       "bsonType": "object",
-      "required": ["question_id", "question", "question_type_id", "category_id", "difficulty", "options", "right_answer_index", "solution", "references"],
+      "required": ["statement_id", "statement", "statement_type_id", "category_id", "difficulty", "options", "right_answer_index", "solution", "references"],
       "properties": {
-        "question_id": {"bsonType": "objectId", "description": "must be a objectId"},
-        "question": {
+        "statement_id": {"bsonType": "objectId", "description": "must be a objectId"},
+        "statement": {
             "bsonType": "array",
             "minItems": 1,  
             "items": {
@@ -16,7 +16,7 @@
               }
             }
           },
-        "question_type_id": {"bsonType": "objectId", "description": "must be a objectId"},
+        "statement_type_id": {"bsonType": "objectId", "description": "must be a objectId"},
         "category_id": {"bsonType": "objectId", "description": "must be a objectId"},
         "difficulty": {"bsonType": "int", "description": "must be an integer"},
         "options": {

@@ -32,7 +32,7 @@ class Singleton(type):
 class CollectionBase:
     def __init__(self,collection_name,db) -> None:
         self.collection_name = collection_name
-        self.schema = self.load_schema(self.collection_name)
+        # self.schema = self.load_schema(self.collection_name)
         # try:
         #     db.create_collection(self.collection_name,validator={"$jsonSchema": self.schema})
         # except Exception as e:
@@ -67,76 +67,76 @@ class Metadata(CollectionBase):
                         "level_id":ObjectId(),
                         "index": 1,
                         "level_name": "Beginner-1",
-                        "num_questions": 5,
-                        "question_difficulty_distribution": [100, 0, 0, 0, 0],
+                        "num_statements": 5,
+                        "statement_difficulty_distribution": [100, 0, 0, 0, 0],
                         "min_score": 50
                     },
                     {
                         "level_id":ObjectId(),
                         "index": 2,
                         "level_name": "Beginner-2",
-                        "num_questions": 10,
-                        "question_difficulty_distribution": [50, 50, 0, 0, 0],
+                        "num_statements": 10,
+                        "statement_difficulty_distribution": [50, 50, 0, 0, 0],
                         "min_score": 50
                     },  
                     {
                         "level_id":ObjectId(),
                         "index": 3,
                         "level_name": "Beginner-3",
-                        "num_questions": 10,
-                        "question_difficulty_distribution": [0, 100, 0, 0, 0],
+                        "num_statements": 10,
+                        "statement_difficulty_distribution": [0, 100, 0, 0, 0],
                         "min_score": 50
                     },                                                       
                     {
                         "level_id":ObjectId(),
                         "index": 4,
                         "level_name": "Intermediate-1",
-                        "num_questions": 10,
-                        "question_difficulty_distribution": [0, 50, 50, 0, 0],
+                        "num_statements": 10,
+                        "statement_difficulty_distribution": [0, 50, 50, 0, 0],
                         "min_score": 50
                     },
                     {
                         "level_id":ObjectId(),
                         "index": 5,
                         "level_name": "Intermediate-2",
-                        "num_questions": 10,
-                        "question_difficulty_distribution": [0, 0, 100, 0, 0],
+                        "num_statements": 10,
+                        "statement_difficulty_distribution": [0, 0, 100, 0, 0],
                         "min_score": 50
                     },
                     {
                         "level_id":ObjectId(),
                         "index": 6,
                         "level_name": "Intermediate-3",
-                        "num_questions": 10,
-                        "question_difficulty_distribution": [0, 0, 50, 50, 0],
+                        "num_statements": 10,
+                        "statement_difficulty_distribution": [0, 0, 50, 50, 0],
                         "min_score": 300
                     },                                                
                     {
                         "level_id":ObjectId(),
                         "index": 7,
                         "level_name": "Advanced-1",
-                        "num_questions": 10,
-                        "question_difficulty_distribution": [0, 0, 0, 100, 0],
+                        "num_statements": 10,
+                        "statement_difficulty_distribution": [0, 0, 0, 100, 0],
                         "min_score": 350
                     },
                     {
                         "level_id":ObjectId(),
                         "index": 8,
                         "level_name": "Advanced-2",
-                        "num_questions": 10,
-                        "question_difficulty_distribution": [0, 0, 0, 50, 50],
+                        "num_statements": 10,
+                        "statement_difficulty_distribution": [0, 0, 0, 50, 50],
                         "min_score": 400
                     },
                     {
                         "level_id":ObjectId(),
                         "index": 9,
                         "level_name": "Advanced-3",
-                        "num_questions": 10,
-                        "question_difficulty_distribution": [0, 0, 0, 0, 100],
+                        "num_statements": 10,
+                        "statement_difficulty_distribution": [0, 0, 0, 0, 100],
                         "min_score": 450
                     }                                                                          
                 ],
-                "questions_difficulties": [
+                "statements_difficulties": [
                     {"weight":10,"time_in_sec":10},
                     {"weight":20,"time_in_sec":10},
                     {"weight":30,"time_in_sec":10},
@@ -152,10 +152,10 @@ class Metadata(CollectionBase):
                     {"category_id": ObjectId(), "title": "Music"},
                     {"category_id": ObjectId(), "title": "Art"}
                 ],
-                "question_types": [
-                    {"question_type_id": ObjectId(), "title": "True Or False"},
-                    {"question_type_id": ObjectId(), "title": "Four Options"},
-                    {"question_type_id": ObjectId(), "title": "Two Options"}
+                "statement_types": [
+                    {"statement_type_id": ObjectId(), "title": "True Or False"},
+                    {"statement_type_id": ObjectId(), "title": "Four Options"},
+                    {"statement_type_id": ObjectId(), "title": "Two Options"}
                 ],
                 "supported_languages": [
                     {"language_id": ObjectId(), "language": "English", "symbol":"en"}
@@ -176,8 +176,10 @@ class Metadata(CollectionBase):
 
     @handle_exceptions
     def get_latest_metadata(self):
-        latest_document = self.collection.find({}).sort('datetime', -1).limit(1)
-        return latest_document
+        latest_document = self.collection.find({}).sort('date', -1).limit(1)
+        actual_document = latest_document[0]
+        return actual_document
+
 
     @handle_exceptions
     def get_level_by_level_id(self,level_id:str):
@@ -222,18 +224,46 @@ class Users(CollectionBase):
         return True
     
     @handle_exceptions
-    def get_user_by_id(self,user_id:str):
-        self.collection.find({"user_id":ObjectId(user_id)})
-        logger.info("get_user_by")
+    def get_user_by_id(self,user_id):
+        user = self.collection.find_one({"user_id":user_id})
+        return user
+
+    @handle_exceptions
+    def get_user_by_username(self,username):
+        user = self.collection.find_one({"username":username})
+        return user
+    def get_password_by_username(self, user: str):
+        # Todo check that it is correct
+        # Find the user in the database
+        user = self.collection.find_one({'username': user})
+
+        if user:
+            # Return the hashed password if the user is found
+            return user['password']
+        else:
+            # Return None if the user is not found
+            return None
+
+    def get_token_by_username(self, user: str):
+        # Todo check that it is correct
+        user = self.collection.find_one({'username': user})
+
+        if user:
+            # Return the hashed password if the user is found
+            return user['password_token']
+        else:
+            # Return None if the user is not found
+            return None
     
     @handle_exceptions
     def update_user_progress(self,user_id:str,new_data):
+        logger.info(new_data)
         # level_data = {
         #     "level_id":ObjectId(),
         #     "index": 1,
         #     "level_name": "Beginner-1",
-        #     "num_questions": 5,
-        #     "question_difficulty_distribution": [100, 0, 0, 0, 0],
+        #     "num_statements": 5,
+        #     "statement_difficulty_distribution": [100, 0, 0, 0, 0],
         #     "min_score": 50
         # }
         # new_data = {
@@ -241,57 +271,65 @@ class Users(CollectionBase):
         #     "index":1,
         #     "score":100,
         # }
+        level_id = new_data['level_id']
+        user = self.collection.find_one({"user_id": user_id})
+        highscores = user['levels_highscores']
+        existing_level = False
+        for highscore in highscores:
+            if highscore['level_id'] == level_id:
+                logger.info(f"exists")
+                existing_level = True
 
-        existing_level = self.collection.find_one(  # = did user play this level before
-            {"user_id": ObjectId(user_id), "levels_highscores.level_id": level_id},
-            {"levels_highscores.$": 1}
-        )
-        user = self.collection.find_one({"user_id": ObjectId(user_id)}) 
+        user = self.collection.find_one({"user_id": user_id})
+
         current_level_index = user.get("current_level_index", None)
         new_score = new_data['score']
-        level_id = new_data['level_id']
-        level_index = new_data['index']
+        level_index = new_data['level_index']
 
         if existing_level: # if # user already played this level and score is lower then what it used to be leave,
-            existing_highscore = existing_level['levels_highscores'][0]['highscore'] # user current highest score in this level
+            logger.info(f"user played this level before ")
+
+            the_level = self.collection.find_one(
+                {"user_id": user_id, "levels_highscores": {"$elemMatch": {"level_id": level_id}}},
+                {"levels_highscores.$": 1}
+            )
+
+            existing_highscore = the_level['levels_highscores'][0]['highscore'] # user current highest score in this level
+
             if new_score < existing_highscore:
+                logger.info(f"user score {new_score} is lower then highscore {existing_highscore}")
                 return
         # V -- either user play new level , or user with better highscore in level he played before
         
-        
+
         update_data = {
             "level_id":level_id,
-            "index":level_index,
+            "level_index":level_index,
             "highscore":new_score,
-            "date":datetime.now()
+            "date":datetime.now().isoformat()
         }
 
         if existing_level: # user already played this level so new score is better
-            self.collection.update_one(
-                {"user_id": ObjectId(user_id), "levels_highscores.level_id": level_id},
-                {"$set": {"levels_highscores.$": update_data}}
-            )
+            logger.info(f" user already played this level so new score is better ")
+            res = self.collection.update_one(
+                {"user_id": user_id, "levels_highscores.level_id": level_id},
+                {"$set": {"levels_highscores.$.highscore": 100}})
+
+
         else: # user did not played this level before
             self.collection.update_one(
-                {"user_id": ObjectId(user_id)},
+                {"user_id": user_id},
                 {"$push": {"levels_highscores": update_data}}
             )
-        
+
         level = mongo.Metadata.get_level_by_level_id(level_id)
         min_score = level.get('min_score',None)
         if current_level_index < level_index and new_score > min_score: # update user current level index if the index is lower and score is higher then minimum of that level.
             self.collection.update_one(
-                {"user_id": ObjectId(user_id)},
+                {"user_id": user_id},
                 {"$set": {"current_level_index": level_index}}
             )
     
-
-
-
-
-    
-    
-
 
 class Statements(CollectionBase):
     def __init__(self, db) -> None:
@@ -307,8 +345,8 @@ class Statements(CollectionBase):
                             solution:str,
                             references:list[str]):
         new_statement_data = {
-            "question_id": ObjectId(), 
-            "question": statement,
+            "statement_id": ObjectId(), 
+            "statement": statement,
             "difficulty": difficulty,
             "options": options,
             "right_answer_index": right_answer_index,
@@ -339,8 +377,8 @@ class Statements(CollectionBase):
     @handle_exceptions
     def get_level_statements(self,level_id):
         level = mongo.Metadata.get_level_by_level_id(level_id)
-        num_of_statements = level["num_questions"]
-        difficulty_distribution = level["difficulty_distribution"]
+        num_of_statements = level["num_statements"]
+        difficulty_distribution = level["statement_difficulty_distribution"]
         return self.get_batch_random_statements(num_of_statements,difficulty_distribution)
 
 
