@@ -1,5 +1,5 @@
 # Generic-Authentication Server with Local JSON DB
-
+docker exec backend-backend-1 python scripts/insert_data.py
 **Brief description of your project**
 
 ## Table of Contents
