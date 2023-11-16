@@ -34,7 +34,7 @@ const get_level = (level_id) => {
 
 
 
-const StatementScreen = ({statement}) => {
+const StatementScreen = ({index,statement}) => {
     return (
         <>
         </>
@@ -47,8 +47,10 @@ const statements = [
     }
 ]
 
-const get_level_statements = ({index,statement,onFinish}) => {
-
+const get_level_statements = ({statement,onFinish}) => {
+    const onAnswer = () => {
+        if
+    }
 }
 
 const TriviaScreen = ({ route }) => {
@@ -65,7 +67,10 @@ const TriviaScreen = ({ route }) => {
     }
     return (
         <>
-            <StatementScreen index={currentStatementIndex} statement={statements[currentStatementIndex]} onFinish={onFinish} />
+            <Text>{level.level_name}</Text>
+            <Text>Current Score: {score}</Text>
+            <Text>{currentStatementIndex}/{num_statements}</Text>
+            <StatementScreen  statement={statements[currentStatementIndex]} onFinish={onFinish} />
         </>
     );
 };
