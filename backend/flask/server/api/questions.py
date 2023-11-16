@@ -10,4 +10,5 @@ class Questions(Resource):
         data = request.get_json()
         return make_response(jsonify(message=f"hello world"), 201)
 
+    
 
