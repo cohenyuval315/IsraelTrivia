@@ -8,7 +8,6 @@ from functools import wraps
 TOKEN_LENGTH = 8  # Length of the secure token for user IDs
 
 
-
 def is_valid(user_input):
     """
     A function that checks if the user's input is valid.

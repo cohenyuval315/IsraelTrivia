@@ -24,6 +24,7 @@ class Home(Resource):
         A method that returns a message when you reach the server.
         :return: A simple message.
         """
-        lastest_metadata = mongo.Metadata.get_latest_metadata()
-        return make_response(jsonify(message=lastest_metadata), 201)
+
+        latest_metadata = mongo.Metadata.get_latest_metadata()
+        return make_response(jsonify(message=latest_metadata), 201)
     
