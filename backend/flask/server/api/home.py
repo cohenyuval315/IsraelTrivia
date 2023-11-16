@@ -22,3 +22,5 @@ class Home(Resource):
         :return: A simple message.
         """
         return WELCOME_MSG, 200
+    
+    

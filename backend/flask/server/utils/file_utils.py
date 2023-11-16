@@ -1,21 +1,25 @@
-def create_dict(endpoints_dict):
-    """
-    A function that receives a path to the configuration file and returns the resource dictionary.
-    :param endpoints_dict: The path to the configuration file.
-    :return: The resource dictionary with all the endpoints.
-    """
 
-    r_dict = {}  # The dict to store the classes and the endpoints.
+class FileUtils:
+    pass
 
-    # Check if the length is the same.
-    if len(endpoints_dict) != len(class_dict):
-        return None
+# def create_dict(endpoints_dict):
+#     """
+#     A function that receives a path to the configuration file and returns the resource dictionary.
+#     :param endpoints_dict: The path to the configuration file.
+#     :return: The resource dictionary with all the endpoints.
+#     """
 
-    # Iterate over all the endpoints.
-    for endpoint in endpoints_dict:
-        if endpoint in class_dict:
-            r_dict[class_dict[endpoint]] = endpoints_dict[endpoint]["controller"]  # Add to the dictionary.
-        else:
-            return None
+#     r_dict = {}  # The dict to store the classes and the endpoints.
 
-    return r_dict
+#     # Check if the length is the same.
+#     if len(endpoints_dict) != len([]):
+#         return None
+
+#     # Iterate over all the endpoints.
+#     for endpoint in endpoints_dict:
+#         if endpoint in class_dict:
+#             r_dict[class_dict[endpoint]] = endpoints_dict[endpoint]["controller"]  # Add to the dictionary.
+#         else:
+#             return None
+
+#     return r_dict
