@@ -8,26 +8,35 @@ services:
     stop_signal: SIGINT
 
     environment:
-      - SECRET_KEY=${MY_SECRET_KEY}
+      - SECRET_KEY=SOME_SECRET
       - FLASK_SERVER_HOST=0.0.0.0
       - FLASK_SERVER_PORT=5000
       - FLASK_APP=server.py
       - FLASK_ENV=development
       - CONFIG_MONGODB_ADMINUSERNAME=root
       - CONFIG_MONGODB_ADMINPASSWORD=pass
-      - CONFIG_MONGODB_URI=mongodb://root:pass@mongo:27017/      
-      - CONFIG_MONGO_DATABASE_NAME=TriviaDB      
+      - CONFIG_MONGODB_URI=mongodb+srv://amir:amir@bestsites.mtxy2.mongodb.net/TriviaDB?retryWrites=true&w=majority
+      - CONFIG_MONGO_DATABASE_NAME=TriviaDB
     volumes:
       - ./flask:/server
     ports:
-      - 5000:5000      
+      - 5000:5000
     depends_on:
-      -  mongo          
-  mongo:
-    image: mongo
+      - mongo
+    networks:
+      - mynetwork
+  mongodb:
+    image: mongo:latest
+    restart: always
     ports:
       - 27017:27017
       - 8081:8081
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=pass
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
