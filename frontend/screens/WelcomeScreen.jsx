@@ -41,14 +41,14 @@ const styles = StyleSheet.create({
     swipeText: {
         color: 'white',
         fontSize: 50,
-        fontFamily: 'Sonsie One',
+        
         fontWeight: '400',
         marginBottom: 10,
     },
     masterText: {
         color: 'white',
         fontSize: 50,
-        fontFamily: 'Sonsie One',
+        
         fontWeight: '400',
         marginBottom: 20,
     },
