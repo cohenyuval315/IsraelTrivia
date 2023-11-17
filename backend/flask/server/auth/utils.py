@@ -3,6 +3,12 @@ from flask import request
 from bleach import clean
 import functools
 from functools import wraps
+from bson import json_util
+import json
+
+def parse_json(data):
+    return json.loads(json_util.dumps(data))
+
 
 
 TOKEN_LENGTH = 8  # Length of the secure token for user IDs

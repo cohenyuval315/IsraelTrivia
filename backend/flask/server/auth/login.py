@@ -3,7 +3,7 @@ from flask import jsonify, request, make_response
 from flask_bcrypt import Bcrypt
 from .utils import is_valid
 from db import mongo
-
+from .utils import parse_json
 
 bcrypt = Bcrypt()
 
@@ -75,7 +75,7 @@ class Login(Resource):
                 connect_user(username)  # Add user to the online users array
                 user = mongo.Users.get_user_by_username(username)
                 user_id = user['user_id']
-                return make_response(jsonify(user_id), 200)
+                return make_response(jsonify(parse_json(user_id)), 200)
 
 
 

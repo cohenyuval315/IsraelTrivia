@@ -1,3 +1,9 @@
+from bson import json_util
+import json
+
+def parse_json(data):
+    return json.loads(json_util.dumps(data))
+
 
 # custom_login_required Decorator
 def custom_login_required(func):

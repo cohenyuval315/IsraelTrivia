@@ -241,6 +241,29 @@ def clean_collections():
 
 
 
+def generate_test_user():
+    user_id = '0'
+
+    #password_token = secrets.token_hex(8)  # Adjust the token length as needed
+
+    #salted_password = password_token + "1"
+
+    # Hash the password using Flask-Bcrypt
+    # password_hash = bcrypt.generate_password_hash(salted_password).decode('utf-8')
+    password_token = ""
+    index = random.randint(0, 100000)
+    level_index = random.randint(1, 8)
+    highscores = generate_highscore(level_index)
+    new_user = {
+        "user_id": user_id,
+        "username": "user",
+        "password": "pass",
+        "password_token": password_token,
+        "current_level_index": level_index,
+        "levels_highscores": highscores,
+        "settings": []
+    }
+    return new_user
 
 def generate_user():
     user_id = str(ObjectId())
@@ -686,9 +709,13 @@ def run_script():
     statements_index = 0
     try:
         mongo.Metadata.collection.insert_one(metadata)
+        
         logger.info(f"successfuly inserted metadata")
+        test_user = generate_test_user()
+        mongo.Users.collection.insert_one(test_user)
         for user in users:
             mongo.Users.collection.insert_one(user)
+
             user_index += 1
         for statement in statements:
             mongo.Statements.collection.insert_one(statement)
