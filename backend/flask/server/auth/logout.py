@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from flask import jsonify, request, make_response
-
+from .utils import parse_json
 class Logout(Resource):
     def get(self):
         # Create a response to clear the 'username' cookie

@@ -1,7 +1,9 @@
 from flask_restful import Resource
 from flask import jsonify, request, make_response
 from db import mongo
-
+from logger import logger
+import json
+from .utils import parse_json
 
 # Constants and paths
 WELCOME_MSG = 'You have reached the server.'
@@ -26,5 +28,6 @@ class Home(Resource):
         """
 
         latest_metadata = mongo.Metadata.get_latest_metadata()
-        return make_response(jsonify(message=latest_metadata), 201)
+
+        return make_response(parse_json(latest_metadata), 201)
     

@@ -324,12 +324,13 @@ class Users(CollectionBase):
 
         level = mongo.Metadata.get_level_by_level_id(level_id)
         min_score = level.get('min_score',None)
-        if current_level_index < level_index and new_score > min_score: # update user current level index if the index is lower and score is higher then minimum of that level.
-            self.collection.update_one(
+        if current_level_index == level_index and new_score > min_score: # update user current level index if the index is lower and score is higher then minimum of that level.
+            logger.info("update current level uindex")
+            res = self.collection.update_one(
                 {"user_id": user_id},
-                {"$set": {"current_level_index": level_index}}
-            )
-    
+                {"$set": {"current_level_index": current_level_index + 1}}
+            ) 
+
 
 class Statements(CollectionBase):
     def __init__(self, db) -> None:
