@@ -9,6 +9,68 @@ from flask_bcrypt import Bcrypt
 import random
 import string
 import secrets
+import pandas as pd
+
+def read_excel_file(file_path):
+    try:
+        
+        df = pd.read_excel(file_path)
+        return df
+    except Exception as e:
+        print(f"Error reading Excel file: {e}")
+
+df = read_excel_file("/app/scripts/statements.xlsx")
+
+extracted_rows = []
+hebrew = None
+english = None
+for index, row in df.iterrows():
+    if index % 2 == 1:        
+        extracted_rows.append(row.to_list())
+
+
+    
+def generate_statement_from_file(row):
+    statement = row[1]
+    diff = random.choice([1, 2, 3, 4, 5])
+    option_true_false = [
+        {
+            "en": "true"
+        },
+        {
+            "en": "false"
+        }
+    ],
+    
+    if row[2] == 'true':
+        answer = 0
+    else:
+        answer = 1
+
+    solution = row[3]
+
+    new_statement = {
+
+        "statement_id": str(ObjectId()),
+        "statement": [
+            {
+                "en": f"{statement}"
+            }
+        ],
+        "difficulty": diff,
+        "options": option_true_false,
+        "right_answer_index": answer,
+        "solution": solution,
+        "references": []
+    }
+    return new_statement
+    
+
+
+
+logger.info(hebrew)
+logger.info(english)
+
 
 bcrypt = Bcrypt()
 
@@ -139,7 +201,6 @@ metadata = {
 
 levels_ids = metadata
 
-
 def generate_random_link(length=10):
     characters = string.ascii_letters + string.digits
     random_link = ''.join(random.choice(characters) for _ in range(length))
@@ -240,16 +301,8 @@ def clean_collections():
     mongo.Statements.drop()
 
 
-
 def generate_test_user():
     user_id = '0'
-
-    #password_token = secrets.token_hex(8)  # Adjust the token length as needed
-
-    #salted_password = password_token + "1"
-
-    # Hash the password using Flask-Bcrypt
-    # password_hash = bcrypt.generate_password_hash(salted_password).decode('utf-8')
     password_token = ""
     index = random.randint(0, 100000)
     level_index = random.randint(1, 8)
@@ -267,13 +320,6 @@ def generate_test_user():
 
 def generate_user():
     user_id = str(ObjectId())
-
-    #password_token = secrets.token_hex(8)  # Adjust the token length as needed
-
-    #salted_password = password_token + "1"
-
-    # Hash the password using Flask-Bcrypt
-    # password_hash = bcrypt.generate_password_hash(salted_password).decode('utf-8')
     password_token = ""
     index = random.randint(0, 100000)
     password_hash = f"pass{index}"
@@ -291,420 +337,15 @@ def generate_user():
     return new_user
 
 
-# statements = [
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#     {
-#         "statement_id": ObjectId(),
-#         "statement": [
-#             {
-#                 "en": "statement 1"
-#             }
-#         ],
-#         "difficulty": 1,
-#         "options": [
-#             {
-#                 "en": "true"
-#             },
-#             {
-#                 "en": "false"
-#             }
-#         ],
-#         "right_answer_index": 0,
-#         "solution": "this is the full description of the solution of this statement.... blablabla from the history of today blabalba... for more reference you can read below blablabla...",
-#         "references": ["reflink.com", "ref2link.com"]
-#     },
-#
-# ]
-
 
 def run_script():
     clean_collections()
     num_users = 4
-    num_statements = 200
+    num_statements = 100
     users = [generate_user() for i in range(num_users)]
     statements = [generate_statement() for i in range(num_statements)]
+    ready_file_statements = [generate_statement_from_file(row) for row in extracted_rows]
+    logger.info(f"num of file items = {len(ready_file_statements)}")
     user_index = 0
     statements_index = 0
     try:
@@ -720,6 +361,10 @@ def run_script():
         for statement in statements:
             mongo.Statements.collection.insert_one(statement)
             statements_index += 1
+        for s in ready_file_statements:
+            mongo.Statements.collection.insert_one(s)
+            logger.info(s)
+            statements_index += 1            
     except Exception as e:
         logger.error(e)
     logger.info(f"successfuly inserted {user_index} users")
