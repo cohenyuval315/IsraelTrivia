@@ -1,40 +1,73 @@
 // MainScreen.jsx
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Modal, Button } from 'react-native';
-import LinearGradient from "react-native-linear-gradient";
+import { View, Text, ScrollView, TouchableOpacity, Modal, Button,StyleSheet } from 'react-native';
+import api_client from '../services/ApiClient';
+import LevelIconComponent from '../components/LevelIconComponent';
+import {LinearGradient} from 'expo-linear-gradient';
+import LevelDetails from '../components/LevelDetails';
+import { useFocusEffect } from '@react-navigation/native';
+import LevelSeparator from '../components/LevelSeparator';
+import LevelsHeader from '../components/LevelsHeader';
 
-const user_current_level_index = 3
-const initial_levels = [
-    {
-        "level_id": 0,
-        "index": 1,
-        "level_name": "Level"
-    },
-    {
-        "level_id": 1,
-        "index": 2,
-        "level_name": "Level"
-    },
-    {
-        "level_id": 2,
-        "index": 3,
-        "level_name": "Level"
-    },
-]
 
-const levels = initial_levels.map((item) => {
-    item['locked'] = user_current_level_index > item.index ? false : true;
-    return item;
-});
+
 
 const LevelScreen = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedLevel, setSelectedLevel] = useState(null);
+    const [currentLevelIndex,setCurrentLevelIndex] = useState(null)
+    const [levelsData,setLevelData] = useState(null)
+
+    const [levels,setLevels] = useState(null)
+    const [isLoading,setIsLoading] = useState(true)
+
+    const fetchData = () => {
+        console.log("init");
+        api_client.getAppData().then((data)=>{
+            app_levels = [...data['data']['levels']]
+            setLevelData(app_levels);
+            api_client.getUserProfile().then((user_data)=>{
+                
+                const unlocked_levels = user_data['levels_highscores']
+                const current_level_index = user_data['current_level_index']
+                setCurrentLevelIndex(current_level_index)
+                const locked_levels = app_levels.filter((level)=> level.level_index > current_level_index)
+                setLevels([...unlocked_levels.map((item)=>{item['unlocked']=true; return item}),...locked_levels.map((item)=>{item['unlocked']=false;return item;})].reverse())
+
+
+            }).catch((user_error)=>console.log(user_error))
+
+            setIsLoading(false)
+        }).catch((error)=>
+        console.log(error))
+    }
+
+    useFocusEffect(
+        React.useCallback(() => {
+          // This function will be called when the screen gains focus
+    
+          // Add the logic you want to execute when the screen is focused
+          fetchData();
+    
+          // You can add more logic here if needed
+    
+          return () => {
+            // This function will be called when the screen loses focus
+            // You can clean up any resources or subscriptions here if needed
+          };
+        }, [/* dependencies that should trigger the effect */])
+    );
+
+    useEffect(()=>{
+        fetchData()
+
+    },[])
 
     const handleLevelPress = (level) => {
-        if (!level.locked) {
+        if (level.unlocked) {
             setSelectedLevel(level);
             setModalVisible(true);
+            console.log(level)
         } else {
             console.log(`Level ${level.level_name} is locked!`);
         }
@@ -43,45 +76,51 @@ const LevelScreen = ({ navigation }) => {
     const navigateToGame = () => {
         setModalVisible(false);
         // Update the navigation to pass necessary parameters
-        navigation.navigate('Trivia', { selectedLevel });
+        const selectedLevelData = getSelectedLevelData()
+        navigation.navigate('Trivia', { selectedLevel ,selectedLevelData  });
+    }
+    const onLogoutPress = () => {
+
+
+    }
+
+    const getSelectedLevelData = () => {
+        if (selectedLevel && levelsData){
+            return levelsData.filter((item)=>item['level_id'] === selectedLevel['level_id'])[0]
+        }
+        return {}
     }
 
     return (
-
-            <View >
+        <>
+            {!isLoading && (
+                <LinearGradient colors={['#6DE5B5', '#0039C0']} start={{ x: 1.2, y: 0 }} end={{ x: 0 , y: 1 }} style={styles.container}>
+            <View style={{flex:1}}>
                 {/* Header with Logout Button */}
-                <View style={{ padding: 10, backgroundColor: 'lightblue' }}>
-                    <Button title="Logout" onPress={() => null} />
-                </View>
+                <LevelsHeader userName={"Test"} currentLevel={currentLevelIndex} onLogoutPress={onLogoutPress}/>
 
                 {/* Scroll View with Level Blocks */}
-                <ScrollView contentContainerStyle={{ padding: 10, alignItems: 'center' }}>
-                    {levels.map((level, index) => (
-                        <View key={level.level_id} style={{justifyContent: 'flex-end', alignItems: 'center' }}>
-                            <TouchableOpacity
-                                onPress={() => handleLevelPress(level)}
-                                style={{
-                                    width: 50,
-                                    height: 50,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    marginVertical: 5,
-                                    marginRight: 5,
-                                    backgroundColor: level.locked ? 'lightblue' : 'gray',
-                                    borderRadius: 25,
-                                    overflow: 'hidden',
-                                    borderColor: 'black',  // Add this line to add a black border
-                                    borderWidth: 2,       // Add this line to set the border width
-                                }}
-                            >
-
-                                <View style={{ alignItems: 'center' }}>
-                                    <Text>{level.level_name}</Text>
-                                    <Text>{level.level_id}</Text>
-                                </View>
-                            </TouchableOpacity>
-
-                        </View>
+                <ScrollView
+                      showsVerticalScrollIndicator={false}
+                      showsHorizontalScrollIndicator={false}
+                >
+                    {levels && levels.map((level, index) => (
+                    <React.Fragment key={`level_${index}`}>
+                        {level.level_index === levels.length - 1 ? (
+                        <>
+                            {/* Render content for the last level */}
+                        </>
+                        ) : (
+                        <>
+                            {level.level_index > currentLevelIndex - 1 ? (
+                            <LevelSeparator key={`level_separator_${index}`} colored={false} />
+                            ) : (
+                            <LevelSeparator key={`level_separator_${index}`} colored={true} />
+                            )}
+                        </>
+                        )}
+                        <LevelIconComponent key={`level_icon_${index}`} level={level} onPress={handleLevelPress} />
+                    </React.Fragment>
                     ))}
 
                 </ScrollView>
@@ -91,31 +130,55 @@ const LevelScreen = ({ navigation }) => {
                     animationType="slide"
                     transparent={false}
                     visible={modalVisible}
-                    onRequestClose={() => setModalVisible(false)}
-                >
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <View style={{ padding: 20, backgroundColor: 'white', borderRadius: 10 }}>
-                            {selectedLevel && selectedLevel.index === user_current_level_index ? (
-                                <>
-                                    <Text>Level Details</Text>
-                                    <Text>Name: {selectedLevel?.level_name}</Text>
-                                    <Button title={"Start"} onPress={navigateToGame}></Button>
-                                </>
-                            ) : (
-                                <>
-                                    <Text>Level Details</Text>
-                                    <Text>Name: {selectedLevel?.level_name}</Text>
-                                    {/* Add other properties if needed */}
-                                    <Button title={"Play Again"} onPress={navigateToGame}></Button>
-                                </>
-                            )}
-                            <Button title="Close" onPress={() => setModalVisible(false)} />
-                        </View>
-                    </View>
+                    onRequestClose={() => setModalVisible(false)}>
+                        <LevelDetails lastest={selectedLevel && selectedLevel.level_index === currentLevelIndex} level={selectedLevel} levelData={getSelectedLevelData()} onStart={navigateToGame} onClose={() => setModalVisible(false)} />
+                    
+
                 </Modal>
             </View>
-
+            </LinearGradient>
+            )}
+        </>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'linearGradient(0,0,0,0)', // Set your desired background color
+        paddingLeft: 15,
+        paddingRight: 15,
+        borderRadius: 5
+    },
+    swipeText: {
+        color: 'white',
+        fontSize: 50,
+        fontWeight: '400',
+        marginBottom: 10,
+    },
+    masterText: {
+        color: 'white',
+        fontSize: 50,
+        fontWeight: '400',
+        marginBottom: 20,
+    },
+    button: {
+        backgroundColor: '#3498db', // Default button color
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        marginBottom: 10,
+    },
+    buttonText: {
+        color: '#fff', // Button text color
+        fontSize: 18,
+        textAlign: 'center',
+    },
+    linearGradient: {
+
+    }
+});
 
 export default LevelScreen;
