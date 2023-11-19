@@ -140,7 +140,7 @@ class ApiClient {
     const body = {
       "level_id" : level_id
     }
-    const data = await this._request('POST', endpoint,body);
+      const data = await this._request('GET', endpoint,body);
     return data;
   }; 
 
